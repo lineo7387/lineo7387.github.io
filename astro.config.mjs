@@ -6,7 +6,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   output: 'static',
   site: 'https://lineo7387.github.io',
-  base: '/',
+  base: '/Bauhaus-blog',
   vite: {
     plugins: [tailwindcss()],
   },
