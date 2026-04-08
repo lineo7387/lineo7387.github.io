@@ -1,0 +1,12 @@
+{
+  "skills": {
+    "review-astro": {
+      "description": "审查 Astro 布局和样式代码（Bauhaus 博客项目）",
+      "path": ".claude/commands/review-astro.md"
+    },
+    "ts-check": {
+      "description": "TypeScript 代码规范检查，避免 any、复用现有类型、检查 Astro props 和 content collection 类型",
+      "path": ".claude/commands/ts-check.md"
+    }
+  }
+}

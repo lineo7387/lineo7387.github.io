@@ -4,7 +4,7 @@ import BlogList from "../../components/blog/BlogList.astro";
 import CategoryFilter from "../../components/blog/CategoryFilter.astro";
 import Pagination from "../../components/blog/Pagination.astro";
 import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
-import { getCollection, render } from "astro:content";
+import { getCollection, render, type CollectionEntry } from "astro:content";
 import { BASE } from "../../utils/base";
 
 export async function getStaticPaths() {
@@ -37,7 +37,6 @@ export async function getStaticPaths() {
   // /blog/:category and /blog/:category/:page — all in one loop
   for (const cat of categories) {
     const catSlug = cat.toLowerCase();
-    // /blog/design (category, page 1)
     paths.push({
       params: { slug: catSlug },
       props: { type: "category", category: cat, page: 1 },
@@ -57,8 +56,12 @@ export async function getStaticPaths() {
   return paths;
 }
 
-const { slug } = Astro.params;
-const { type, post, category, page } = Astro.props;
+const { type, post, category, page } = Astro.props as {
+  type: "post" | "pagination" | "category";
+  post: CollectionEntry<"blog"> | undefined;
+  category: string;
+  page: number;
+};
 
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 const sortedPosts = allPosts.sort(
@@ -81,12 +84,16 @@ if (type === "category" && category) {
   filteredPosts = filteredPosts.slice(startIndex, startIndex + postsPerPage);
 } else if (type === "pagination") {
   totalPages = Math.ceil(sortedPosts.length / postsPerPage);
-  totalPages = Math.ceil(sortedPosts.length / postsPerPage);
   const startIndex = ((page || 1) - 1) * postsPerPage;
   filteredPosts = sortedPosts.slice(startIndex, startIndex + postsPerPage);
 }
 
-const { Content } = type === "post" && post ? await render(post) : { Content: null };
+const PostContent = type === "post" && post
+  ? (await render(post)).Content
+  : null;
+
+type PostContentType = (props?: Record<string, unknown>) => unknown;
+const PostContentComponent = PostContent as PostContentType;
 ---
 
 {type === "post" ? (
@@ -101,7 +108,7 @@ const { Content } = type === "post" && post ? await render(post) : { Content: nu
     author={post!.data.author}
     readingTime={post!.data.readingTime}
   >
-    <postContent />
+    <PostContentComponent />
   </BlogPostLayout>
 ) : (
   <BaseLayout
@@ -182,7 +189,7 @@ const { Content } = type === "post" && post ? await render(post) : { Content: nu
 
 <script>
   const searchBtn = document.getElementById('search-btn');
-  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
   searchBtn?.addEventListener('click', () => {
     const query = searchInput?.value.trim();
     if (query) {
@@ -190,7 +197,7 @@ const { Content } = type === "post" && post ? await render(post) : { Content: nu
     }
   });
   searchInput?.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && searchInput) {
       const query = searchInput.value.trim();
       if (query) {
         window.location.href = `${import.meta.env.BASE_URL}blog?q=${encodeURIComponent(query)}`;
