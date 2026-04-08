@@ -216,10 +216,7 @@ const recentPosts = sortedPosts
         Get the latest design insights delivered to your inbox. No spam, just
         thoughtful content.
       </p>
-      <form
-        class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto"
-        onsubmit="event.preventDefault(); alert('Thanks for subscribing!');"
-      >
+      <form id="newsletter-form" class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
         <input
           type="email"
           placeholder="Enter your email"
@@ -234,3 +231,11 @@ const recentPosts = sortedPosts
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const form = document.getElementById('newsletter-form');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert('Thanks for subscribing!');
+  });
+</script>

@@ -57,7 +57,7 @@ const contactInfo = [
           <h2 class="text-2xl font-black uppercase tracking-tight text-black mb-8">
             Send a Message
           </h2>
-          <form class="space-y-6" onsubmit="event.preventDefault(); alert('Thanks for your message! We\'ll be in touch soon.');">
+          <form id="contact-form" class="space-y-6">
             <div>
               <label for="name" class="block text-sm font-bold uppercase tracking-wider text-black mb-2">
                 Name
@@ -174,3 +174,11 @@ const contactInfo = [
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  const form = document.getElementById('contact-form');
+  form?.addEventListener('submit', (e) => {
+    e.preventDefault();
+    alert("Thanks for your message! We'll be in touch soon.");
+  });
+</script>

@@ -1,4 +1,6 @@
 ---
+import { BASE } from '../../utils/base';
+
 interface Props {
   placeholder?: string;
   value?: string;
@@ -7,7 +9,7 @@ interface Props {
 const { placeholder = 'Search articles...', value = '' } = Astro.props;
 ---
 
-<form id="search-form" method="get" action="/blog" class="relative">
+<form id="search-form" method="get" action={`${BASE}/blog`} class="relative">
   <input
     type="search"
     name="q"
@@ -35,7 +37,7 @@ const { placeholder = 'Search articles...', value = '' } = Astro.props;
 </form>
 
 <script>
-  const searchInput = document.getElementById('search-input') as HTMLInputElement;
+  const searchInput = document.getElementById('search-input') as HTMLInputElement | null;
   const clearBtn = document.getElementById('clear-search');
 
   clearBtn?.addEventListener('click', () => {
@@ -49,6 +51,6 @@ const { placeholder = 'Search articles...', value = '' } = Astro.props;
   });
 
   searchInput?.addEventListener('input', () => {
-    clearBtn?.classList.toggle('hidden', !searchInput.value);
+    clearBtn?.classList.toggle('hidden', !searchInput!.value);
   });
 </script>

@@ -6,13 +6,22 @@ import authors from '../../data/authors.json';
 import { getCollection } from 'astro:content';
 import { BASE } from '../../utils/base';
 
+interface Author {
+  name: string;
+  bio: string;
+  role: string;
+  twitter: string | null;
+  github: string | null;
+}
+
 export async function getStaticPaths() {
   const allPosts = await getCollection('blog', ({ data }) => !data.draft);
   const uniqueAuthors = [...new Set(allPosts.map(post => post.data.author))];
+  const authorsTyped = authors as Record<string, Author>;
 
   return uniqueAuthors.map(author => ({
     params: { author: author.toLowerCase().replace(/\s+/g, '-') },
-    props: { author, authorData: authors[author] || authors['Anonymous'] },
+    props: { author, authorData: authorsTyped[author] ?? authorsTyped['Anonymous'] },
   }));
 }
 

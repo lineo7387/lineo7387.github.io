@@ -31,7 +31,7 @@ const updatedFormattedDate = updatedDate?.toLocaleDateString('en-US', {
 });
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} ogImage={heroImage || "/og-default.png"}>
   <article class="blog-post">
     <!-- Hero Section -->
     <header class="relative bg-primary-yellow border-b-4 border-black">
