@@ -69,6 +69,7 @@ const sortedPosts = allPosts.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
 const categories = [...new Set(sortedPosts.map((p) => p.data.category))];
+const planEntries = await getCollection("plans");
 
 const postsPerPage = 6;
 let filteredPosts = sortedPosts;
@@ -78,9 +79,23 @@ let totalPages = 1;
 let totalFilteredCount = sortedPosts.length;
 
 if (type === "category" && category) {
-  filteredPosts = sortedPosts.filter(
-    (p) => p.data.category.toLowerCase() === category.toLowerCase()
+  const catPlanEntries = planEntries.filter(
+    (p) => p.data.skill?.toLowerCase() === category.toLowerCase()
   );
+  const catPlan = catPlanEntries[0];
+  const catPlanOrder = catPlan?.data.planOrder ?? [];
+
+  filteredPosts = sortedPosts
+    .filter((p) => p.data.category.toLowerCase() === category.toLowerCase())
+    .sort((a, b) => {
+      const aIdx = catPlanOrder.indexOf(a.data.planId ?? "");
+      const bIdx = catPlanOrder.indexOf(b.data.planId ?? "");
+      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+      if (aIdx !== -1) return -1;
+      if (bIdx !== -1) return 1;
+      return a.data.pubDate.valueOf() - b.data.pubDate.valueOf();
+    })
+    .reverse(); // 升序：planOrder 排在前的先显示
   totalFilteredCount = filteredPosts.length;
   totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const startIndex = ((page || 1) - 1) * postsPerPage;
@@ -107,7 +122,6 @@ let nextPost: typeof post | undefined;
 let prevIndex: number | undefined;
 let nextIndex: number | undefined;
 
-const planEntries = await getCollection("plans");
 const plan = planEntries.find((p) => p.data.skill === postCategory);
 const planOrder = plan?.data.planOrder;
 
