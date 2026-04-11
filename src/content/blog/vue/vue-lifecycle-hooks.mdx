@@ -157,7 +157,7 @@ onBeforeMount(() => {
 
 onMounted(() => {
   console.log('mounted - 已挂载')
-  this.startAnimation()
+  startAnimation()
 })
 
 onBeforeUpdate(() => {
@@ -170,7 +170,7 @@ onUpdated(() => {
 
 onBeforeUnmount(() => {
   console.log('beforeUnmount - 即将卸载')
-  this.cleanup()
+  cleanup()
 })
 
 onUnmounted(() => {
