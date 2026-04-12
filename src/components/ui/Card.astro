@@ -1,5 +1,6 @@
 ---
 import { BASE } from '../../utils/base';
+import { CATEGORY_COLORS } from '../../config/category-colors';
 
 interface Props {
   title: string;
@@ -20,16 +21,7 @@ const formattedDate = date.toLocaleDateString('en-US', {
   day: 'numeric'
 });
 
-const categoryColors: Record<string, { bg: string; text: string; hover: string }> = {
-  python:      { bg: 'bg-primary-blue',        text: 'text-white',    hover: 'hover:text-primary-blue' },
-  react:       { bg: 'bg-primary-react',       text: 'text-foreground', hover: 'hover:text-primary-react' },
-  'react-native': { bg: 'bg-primary-reactnative', text: 'text-foreground', hover: 'hover:text-primary-reactnative' },
-  vue:         { bg: 'bg-primary-vue',        text: 'text-white',    hover: 'hover:text-primary-vue' },
-  java:        { bg: 'bg-primary-orange',      text: 'text-white',    hover: 'hover:text-primary-orange' },
-  springboot:  { bg: 'bg-primary-green',       text: 'text-white',    hover: 'hover:text-primary-green' },
-  design:      { bg: 'bg-foreground',         text: 'text-white',    hover: 'hover:text-foreground' },
-};
-const colors = categoryColors[category] ?? { bg: 'bg-primary-blue', text: 'text-white', hover: 'hover:text-primary-blue' };
+const colors = CATEGORY_COLORS[category] ?? CATEGORY_COLORS['python'];
 ---
 
 <article class={`bg-white border-4 border-black shadow-hard-lg card-lift relative overflow-hidden ${className}`}>

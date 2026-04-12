@@ -61,7 +61,14 @@
 2. **检查全技能完成状态**：
    - 如果所有知识点都是 `[✅]`
    - 将路线图的 `status` 从 `in-progress` 改为 `completed`
-   - 更新 `_index.md` 中该技能的状态
+
+3. **同步 _index.md**：
+   - 读取 `src/content/_plans/{skill}.md`，统计已完成知识点数量
+   - 读取 `src/content/_plans/_index.md`，更新该技能行的「文章数量」列和「状态」列
+   - 同步规则：
+     - 完成数 > 0 且 < 总数 → `in-progress`
+     - 完成数 == 总数 → `completed`
+     - 完成数 == 0 → 保持 `planning`
 
 ## 规则
 

@@ -6,12 +6,13 @@
 
 | 技能 | 版本 | 状态 | 路线图文件 | 文章数量 |
 |------|------|------|------------|----------|
-| Vue | 3.x | in-progress | [_plans/vue.md](vue.md) | 2 / 12 |
+| Vue | 3.x | completed | [_plans/vue.md](vue.md) | 12 / 12 |
 | React | 18.x | completed | [_plans/react.md](react.md) | 14 / 14 |
 | Python | 3.13 | completed | [_plans/python.md](python.md) | 16 / 16 |
-| Java | 17+ | planning | [_plans/java.md](java.md) | 0 / 12 |
+| Java | 17+ | completed | [_plans/java.md](java.md) | 12 / 12 |
 | React Native | 0.76.x | in-progress | [_plans/react-native.md](react-native.md) | 4 / 12 |
-| Spring Boot | 3.x | planning | [_plans/springboot.md](springboot.md) | 0 / 12 |
+| Spring Boot | 3.x | completed | [_plans/springboot.md](springboot.md) | 11 / 11 |
+| Electron | 35.x | completed | [_plans/electron.md](electron.md) | 11 / 11 |
 
 ## 状态说明
 
