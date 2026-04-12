@@ -57,3 +57,10 @@ planId: {知识点ID}
 
 1. 告诉用户已生成的文章列表
 2. 提示用户「审核 [技能名]」可以启动审核角色
+3. **同步 _index.md**：读取 `src/content/_plans/{skill}.md`，统计已完成知识点数量，读取 `src/content/_plans/_index.md`，更新该技能行的「文章数量」列和「状态」列（`in-progress` 或 `completed`）
+
+> 同步规则：
+> - 扫描 plan 文件中所有 `- [✅]` 数量作为完成数，`planOrder` 总数作为总数
+> - 如果完成数 > 0 且 < 总数 → 状态改为 `in-progress`
+> - 如果完成数 == 总数 → 状态改为 `completed`
+> - 如果完成数 == 0 → 保持 `planning`
