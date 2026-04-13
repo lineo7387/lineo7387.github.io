@@ -5,16 +5,27 @@ import CategoryFilter from "../../components/blog/CategoryFilter.astro";
 import Pagination from "../../components/blog/Pagination.astro";
 import { getCollection } from "astro:content";
 import { BASE } from "../../utils/base";
+import { sortByPlanOrder } from "../../utils/post";
 
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+const planEntries = await getCollection("plans");
+
+// Group by category, sort each group by planOrder
+const categories = [...new Set(allPosts.map((post) => post.data.category))].sort((a, b) =>
+  a.localeCompare(b),
 );
 
-const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
+const allSorted = categories.flatMap((cat) => {
+  const plan = planEntries.find((p) => p.data.skill === cat);
+  return sortByPlanOrder(
+    allPosts.filter((p) => p.data.category === cat),
+    plan?.data.planOrder ?? [],
+  );
+});
+
 const postsPerPage = 6;
-const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
-const paginatedPosts = sortedPosts.slice(0, postsPerPage);
+const totalPages = Math.ceil(allSorted.length / postsPerPage);
+const paginatedPosts = allSorted.slice(0, postsPerPage);
 ---
 
 <BaseLayout
@@ -42,8 +53,8 @@ const paginatedPosts = sortedPosts.slice(0, postsPerPage);
         </div>
         <div class="text-white/70">
           <p class="text-lg font-medium">
-            Discover {sortedPosts.length} article{
-              sortedPosts.length !== 1 ? "s" : ""
+            Discover {allSorted.length} article{
+              allSorted.length !== 1 ? "s" : ""
             }.
           </p>
         </div>
@@ -89,7 +100,7 @@ const paginatedPosts = sortedPosts.slice(0, postsPerPage);
   <section class="bg-white py-16 lg:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div id="posts-container">
-        <BlogList posts={paginatedPosts} columns={3} allPosts={sortedPosts} />
+        <BlogList posts={paginatedPosts} columns={3} allPosts={allSorted} />
       </div>
 
       <div class="mt-16 lg:mt-24">

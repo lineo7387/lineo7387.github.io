@@ -5,16 +5,38 @@ import FeaturedPost from "../components/blog/FeaturedPost.astro";
 import BlogList from "../components/blog/BlogList.astro";
 import { getCollection } from "astro:content";
 import { BASE } from "../utils/base";
+import { sortByPlanOrder } from "../utils/post";
 
 const allPosts = await getCollection("blog", ({ data }) => !data.draft);
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+const planEntries = await getCollection("plans");
+
+// Group by category, sort each group by planOrder
+const categories = [...new Set(allPosts.map((post) => post.data.category))].sort((a, b) =>
+  a.localeCompare(b),
 );
-const featuredPost =
-  sortedPosts.find((post) => post.data.featured) || sortedPosts[0];
-const recentPosts = sortedPosts
-  .filter((post) => post.id !== featuredPost?.id)
-  .slice(0, 6);
+
+const postsByCategory = Object.fromEntries(
+  categories.map((cat) => {
+    const catPosts = allPosts.filter((p) => p.data.category === cat);
+    const plan = planEntries.find((p) => p.data.skill === cat);
+    const planOrder = plan?.data.planOrder ?? [];
+    return [cat, sortByPlanOrder(catPosts, planOrder)];
+  }),
+);
+
+// Featured: first post in the first category
+const featuredPost = postsByCategory[categories[0]]?.[0];
+
+// Recent: remaining posts (all but featured), sorted by planOrder
+const recentPosts = (() => {
+  const remaining = featuredPost
+    ? allPosts.filter((p) => p.id !== featuredPost.id)
+    : allPosts;
+  // Sort remaining by planOrder per category, then by category order
+  return categories.flatMap((cat) =>
+    (postsByCategory[cat] ?? []).filter((p) => p.id !== featuredPost?.id),
+  );
+})();
 ---
 
 <BaseLayout title="Home">

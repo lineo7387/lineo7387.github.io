@@ -19,6 +19,25 @@ export function getSkillDisplayName(category: string): string {
 }
 
 /**
+ * Sort posts by planOrder from the skill plan file.
+ * Posts with planId are sorted by their index in planOrder (ascending).
+ * Posts without planId are placed at the end (stable relative order).
+ */
+export function sortByPlanOrder<T extends { data: { planId?: string } }>(
+  posts: T[],
+  planOrder: string[],
+): T[] {
+  return [...posts].sort((a, b) => {
+    const aIdx = planOrder.indexOf(a.data.planId ?? '');
+    const bIdx = planOrder.indexOf(b.data.planId ?? '');
+    if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+    if (aIdx !== -1) return -1;
+    if (bIdx !== -1) return 1;
+    return 0;
+  });
+}
+
+/**
  * Get the 1-based index of a post within its category.
  * Uses planOrder from the skill plan file if available, otherwise falls back to allPosts order.
  */
