@@ -5,6 +5,7 @@ import Button from '../../components/ui/Button.astro';
 import authors from '../../data/authors.json';
 import { getCollection } from 'astro:content';
 import { BASE } from '../../utils/base';
+import { sortByPlanOrder } from '../../utils/post';
 
 interface Author {
   name: string;
@@ -28,9 +29,20 @@ export async function getStaticPaths() {
 const { author, authorData } = Astro.props;
 
 const allPosts = await getCollection('blog', ({ data }) => !data.draft);
-const authorPosts = allPosts
-  .filter(post => post.data.author === author)
-  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const planEntries = await getCollection('plans');
+const authorPostsRaw = allPosts.filter((post) => post.data.author === author);
+
+// Group by category, sort each group by planOrder
+const authorCategories = [...new Set(authorPostsRaw.map((p) => p.data.category))].sort((a, b) =>
+  a.localeCompare(b),
+);
+const authorPosts = authorCategories.flatMap((cat) => {
+  const plan = planEntries.find((p) => p.data.skill === cat);
+  return sortByPlanOrder(
+    authorPostsRaw.filter((p) => p.data.category === cat),
+    plan?.data.planOrder ?? [],
+  );
+});
 ---
 
 <BaseLayout title={`${author} - Author`} description={`Articles by ${author}`}>

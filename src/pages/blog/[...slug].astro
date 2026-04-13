@@ -4,98 +4,93 @@ import BlogList from "../../components/blog/BlogList.astro";
 import CategoryFilter from "../../components/blog/CategoryFilter.astro";
 import Pagination from "../../components/blog/Pagination.astro";
 import BlogPostLayout from "../../layouts/BlogPostLayout.astro";
-import PostNavigation from "../../components/blog/PostNavigation.astro";
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import { BASE } from "../../utils/base";
+import { sortByPlanOrder } from "../../utils/post";
 
 export async function getStaticPaths() {
   const allPosts = await getCollection("blog", ({ data }) => !data.draft);
-  const sortedPosts = allPosts.sort(
-    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-  );
-  const categories = [...new Set(sortedPosts.map((post) => post.data.category))];
-  const postsPerPage = 6;
+  const planEntries = await getCollection("plans");
 
+  const categories = [...new Set(allPosts.map((post) => post.data.category))].sort((a, b) =>
+    a.localeCompare(b),
+  );
+
+  const allSorted = categories.flatMap((cat) => {
+    const plan = planEntries.find((p) => p.data.skill === cat);
+    return sortByPlanOrder(
+      allPosts.filter((p) => p.data.category === cat),
+      plan?.data.planOrder ?? [],
+    );
+  });
+
+  const postsPerPage = 6;
   const paths = [];
 
   // Individual post pages
   for (const post of allPosts) {
     paths.push({
       params: { slug: post.id },
-      props: { type: "post", post, category: "", page: 1 },
+      props: { type: "post", post, category: "", page: 1, allSorted, planEntries, categories },
     });
   }
 
   // /blog/2, /blog/3, ... (pagination for all posts)
-  const totalPages = Math.ceil(sortedPosts.length / postsPerPage);
-  for (let page = 2; page <= totalPages; page++) {
+  const totalAllPages = Math.ceil(allSorted.length / postsPerPage);
+  for (let page = 2; page <= totalAllPages; page++) {
     paths.push({
       params: { slug: String(page) },
-      props: { type: "pagination", category: "", page },
+      props: { type: "pagination", category: "", page, allSorted, planEntries, categories },
     });
   }
 
-  // /blog/:category and /blog/:category/:page — all in one loop
-  for (const cat of categories) {
-    const catSlug = cat.toLowerCase();
+  // /blog/:category and /blog/:category/:page
+  for (const c of categories) {
+    const catSlug = c.toLowerCase();
+    const catPosts = allSorted.filter((p) => p.data.category === c);
     paths.push({
       params: { slug: catSlug },
-      props: { type: "category", category: cat, page: 1 },
+      props: { type: "category", category: c, page: 1, allSorted, planEntries, categories },
     });
-    const catPosts = sortedPosts.filter(
-      (p) => p.data.category.toLowerCase() === catSlug
-    );
     const catTotal = Math.ceil(catPosts.length / postsPerPage);
     for (let page = 2; page <= catTotal; page++) {
       paths.push({
         params: { slug: `${catSlug}/${page}` },
-        props: { type: "category", category: cat, page },
+        props: { type: "category", category: c, page, allSorted, planEntries, categories },
       });
     }
   }
 
-  return paths;
+  return paths.map((p) => ({
+    ...p,
+    props: { ...p.props, postsPerPage: 6 },
+  }));
 }
 
-const { type, post, category, page } = Astro.props as {
+const { type, post, category, page, allSorted, planEntries, categories, postsPerPage } = Astro.props as {
   type: "post" | "pagination" | "category";
   post: CollectionEntry<"blog"> | undefined;
   category: string;
   page: number;
+  allSorted: CollectionEntry<"blog">[];
+  planEntries: CollectionEntry<"plans">[];
+  categories: string[];
+  postsPerPage: number;
 };
 
-const allPosts = await getCollection("blog", ({ data }) => !data.draft);
-const sortedPosts = allPosts.sort(
-  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
-);
-const categories = [...new Set(sortedPosts.map((p) => p.data.category))];
-const planEntries = await getCollection("plans");
+const sortedPosts = allSorted;
+const planEntries2 = planEntries;
+const currentCategory = category || "";
 
-const postsPerPage = 6;
 let filteredPosts = sortedPosts;
 let currentPage = page || 1;
-let currentCategory = category || "";
 let totalPages = 1;
 let totalFilteredCount = sortedPosts.length;
 
 if (type === "category" && category) {
-  const catPlanEntries = planEntries.filter(
-    (p) => p.data.skill?.toLowerCase() === category.toLowerCase()
+  filteredPosts = sortedPosts.filter(
+    (p) => p.data.category.toLowerCase() === category.toLowerCase(),
   );
-  const catPlan = catPlanEntries[0];
-  const catPlanOrder = catPlan?.data.planOrder ?? [];
-
-  filteredPosts = sortedPosts
-    .filter((p) => p.data.category.toLowerCase() === category.toLowerCase())
-    .sort((a, b) => {
-      const aIdx = catPlanOrder.indexOf(a.data.planId ?? "");
-      const bIdx = catPlanOrder.indexOf(b.data.planId ?? "");
-      if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
-      if (aIdx !== -1) return -1;
-      if (bIdx !== -1) return 1;
-      return a.data.pubDate.valueOf() - b.data.pubDate.valueOf();
-    })
-    .reverse(); // 升序：planOrder 排在前的先显示
   totalFilteredCount = filteredPosts.length;
   totalPages = Math.ceil(filteredPosts.length / postsPerPage);
   const startIndex = ((page || 1) - 1) * postsPerPage;
@@ -110,38 +105,31 @@ const rendered = type === "post" && post ? await render(post) : null;
 const PostContent = rendered?.Content;
 const headings = rendered?.headings ?? [];
 
-// Compute prev/next posts using planOrder from the plan file (if available)
-// Falls back to pubDate ascending order within the same category.
+// PostNavigation: use planOrder within the same category
 const postCategory = post?.data.category ?? "";
-const catPosts = allPosts
-  .filter((p) => p.data.category === postCategory)
-  .sort((a, b) => a.data.pubDate.valueOf() - b.data.pubDate.valueOf());
+const plan = planEntries2.find((p) => p.data.skill === postCategory);
+const planOrder = plan?.data.planOrder;
 
 let prevPost: typeof post | undefined;
 let nextPost: typeof post | undefined;
 let prevIndex: number | undefined;
 let nextIndex: number | undefined;
 
-const plan = planEntries.find((p) => p.data.skill === postCategory);
-const planOrder = plan?.data.planOrder;
-
 if (planOrder && planOrder.length > 0) {
-  // Use planOrder for navigation — map planId to actual post
-  const postByPlanId = Object.fromEntries(allPosts.map((p) => [p.data.planId, p]));
-  const orderedPosts = planOrder
-    .map((id) => postByPlanId[id])
-    .filter(Boolean) as typeof allPosts;
-  const currentIdx = orderedPosts.findIndex((p) => p.id === post?.id);
-  prevPost = currentIdx > 0 ? orderedPosts[currentIdx - 1] : undefined;
-  nextPost = currentIdx >= 0 && currentIdx < orderedPosts.length - 1
-    ? orderedPosts[currentIdx + 1]
+  const catSorted = sortedPosts.filter((p) => p.data.category === postCategory);
+  const currentIdx = post ? catSorted.findIndex((p) => p.id === post.id) : -1;
+  prevPost = currentIdx > 0 ? catSorted[currentIdx - 1] : undefined;
+  nextPost = currentIdx >= 0 && currentIdx < catSorted.length - 1
+    ? catSorted[currentIdx + 1]
     : undefined;
   prevIndex = currentIdx > 0 ? currentIdx - 1 : undefined;
-  nextIndex = currentIdx >= 0 && currentIdx < orderedPosts.length - 1
+  nextIndex = currentIdx >= 0 && currentIdx < catSorted.length - 1
     ? currentIdx + 1
     : undefined;
 } else {
-  // Fallback: use pubDate order
+  const catPosts = sortedPosts
+    .filter((p) => p.data.category === postCategory)
+    .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
   const currentIndex = post ? catPosts.findIndex((p) => p.id === post.id) : -1;
   prevPost = currentIndex > 0 ? catPosts[currentIndex - 1] : undefined;
   nextPost = currentIndex < catPosts.length - 1 && currentIndex !== -1
