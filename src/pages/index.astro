@@ -78,7 +78,7 @@ const recentPosts = (() => {
 
       <!-- Right: Geometric Composition -->
       <div
-        class="relative bg-brand-blue border-t-4 lg:border-t-0 lg:border-l-4 border-black min-h-[300px] lg:min-h-0 order-1 lg:order-2"
+        class="relative bg-brand-blue border-t-4 lg:border-t-0 lg:border-l-4 border-foreground min-h-[300px] lg:min-h-0 order-1 lg:order-2"
       >
         <div class="absolute inset-0 flex items-center justify-center">
           <!-- Large circle -->
@@ -88,12 +88,12 @@ const recentPosts = (() => {
           </div>
           <!-- Overlapping rotated square -->
           <div
-            class="absolute w-36 h-36 md:w-48 md:h-48 bg-brand-yellow/80 border-4 border-black rotate-45"
+            class="absolute w-36 h-36 md:w-48 md:h-48 bg-brand-yellow/80 border-4 border-foreground rotate-45"
           >
           </div>
           <!-- Centered square -->
           <div
-            class="absolute w-24 h-24 md:w-32 md:h-32 bg-white border-4 border-black flex items-center justify-center"
+            class="absolute w-24 h-24 md:w-32 md:h-32 bg-inverse-surface border-4 border-foreground flex items-center justify-center"
           >
             <div
               class="w-12 h-12 md:w-16 md:h-16 bg-brand-red shape-triangle"
@@ -102,11 +102,11 @@ const recentPosts = (() => {
           </div>
           <!-- Small decorative circles -->
           <div
-            class="absolute top-8 right-8 w-8 h-8 bg-brand-yellow border-2 border-black rounded-full"
+            class="absolute top-8 right-8 w-8 h-8 bg-brand-yellow border-2 border-foreground rounded-full"
           >
           </div>
           <div
-            class="absolute bottom-12 left-12 w-6 h-6 bg-white border-2 border-black rounded-full"
+            class="absolute bottom-12 left-12 w-6 h-6 bg-inverse-surface border-2 border-foreground rounded-full"
           >
           </div>
         </div>
@@ -116,7 +116,7 @@ const recentPosts = (() => {
         >
         </div>
         <div
-          class="absolute bottom-0 right-0 w-12 h-12 bg-brand-yellow border-l-4 border-t-4 border-black"
+          class="absolute bottom-0 right-0 w-12 h-12 bg-brand-yellow border-l-4 border-t-4 border-foreground"
         >
         </div>
       </div>
@@ -126,13 +126,13 @@ const recentPosts = (() => {
   <!-- Featured Post Section -->
   {
     featuredPost && (
-      <section class="bg-brand-yellow border-b-4 border-black py-16 lg:py-24">
+      <section class="bg-brand-yellow border-b-4 border-foreground py-16 lg:py-24">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div class="flex items-center gap-4 mb-8">
-            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-black">
+            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-text">
               Featured Article
             </h2>
-            <div class="flex-1 h-4 bg-black" />
+            <div class="flex-1 h-4 bg-foreground" />
           </div>
           <FeaturedPost
             title={featuredPost.data.title}
@@ -149,11 +149,11 @@ const recentPosts = (() => {
   }
 
   <!-- Recent Posts Section -->
-  <section class="bg-brand-blue border-b-4 border-black py-16 lg:py-24">
+  <section class="bg-brand-blue border-b-4 border-foreground py-16 lg:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="flex items-center justify-between mb-8">
         <h2
-          class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white"
+          class="text-2xl md:text-3xl font-black uppercase tracking-tight text-hero-text"
         >
           Recent Articles
         </h2>
@@ -169,7 +169,7 @@ const recentPosts = (() => {
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <span
-            class="inline-block bg-brand-red text-xs font-bold uppercase tracking-widest text-white px-3 py-1 mb-6"
+            class="inline-block bg-brand-red text-xs font-bold uppercase tracking-widest text-on-brand-red px-3 py-1 mb-6"
           >
             About Us
           </span>
@@ -179,7 +179,7 @@ const recentPosts = (() => {
             Building<br />
             <span class="text-brand-blue">with Care</span>
           </h2>
-          <p class="text-lg font-medium text-black/70 dark:text-white/70 leading-relaxed mb-8">
+          <p class="text-lg font-medium text-text/70 leading-relaxed mb-8">
             I write about web development, design systems, and the craft of building meaningful digital experiences. Every article is crafted to help you create better, more thoughtful applications.
           </p>
           <Button href={`${BASE}/about`} variant="secondary" size="lg">
@@ -196,11 +196,11 @@ const recentPosts = (() => {
             >
             </div>
             <div
-              class="absolute bottom-4 left-4 w-12 h-12 bg-brand-blue shape-square border-2 border-black"
+              class="absolute bottom-4 left-4 w-12 h-12 bg-brand-blue shape-square border-2 border-foreground"
             >
             </div>
             <div
-              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-brand-yellow shape-circle border-4 border-black"
+              class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 bg-brand-yellow shape-circle border-4 border-foreground"
             >
             </div>
           </div>
@@ -211,7 +211,7 @@ const recentPosts = (() => {
 
   <!-- Newsletter CTA Section -->
   <section
-    class="bg-brand-red border-b-4 border-black py-16 lg:py-24 relative overflow-hidden"
+    class="bg-brand-red border-b-4 border-foreground py-16 lg:py-24 relative overflow-hidden"
   >
     <!-- Background decorations -->
     <div
@@ -227,11 +227,11 @@ const recentPosts = (() => {
       class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10"
     >
       <h2
-        class="text-4xl md:text-5xl font-black uppercase tracking-tight text-white mb-4"
+        class="text-4xl md:text-5xl font-black uppercase tracking-tight text-hero-text mb-4"
       >
         Stay Updated
       </h2>
-      <p class="text-lg font-medium text-white/80 mb-8">
+      <p class="text-lg font-medium text-hero-text-muted mb-8">
         Get the latest articles on web development and design delivered to your inbox. No spam, just thoughtful content.
       </p>
       <form id="newsletter-form" class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
@@ -243,7 +243,7 @@ const recentPosts = (() => {
         />
         <Button type="submit" variant="yellow" size="lg"> Subscribe </Button>
       </form>
-      <p class="text-sm font-medium text-background/60 mt-4">
+      <p class="text-sm font-medium text-hero-text-muted mt-4">
         Join developers learning together
       </p>
     </div>

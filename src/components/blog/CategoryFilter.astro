@@ -20,7 +20,7 @@ const isAllActive = !activeCategory;
 
 <div class="flex flex-wrap gap-3" id="category-filter">
   {isAllActive ? (
-    <span class="font-bold uppercase text-sm px-4 py-2 border-2 border-foreground bg-brand-yellow text-black shadow-hard-sm cursor-default">
+    <span class="font-bold uppercase text-sm px-4 py-2 border-2 border-foreground bg-brand-yellow text-on-brand-yellow shadow-hard-sm cursor-default">
       All
     </span>
   ) : (
@@ -34,7 +34,7 @@ const isAllActive = !activeCategory;
   {categories.map(category => {
     const isActive = activeCategory.toLowerCase() === category.toLowerCase();
     return isActive ? (
-      <span class="font-bold uppercase text-sm px-4 py-2 border-2 border-foreground bg-brand-yellow text-black shadow-hard-sm cursor-default">
+      <span class="font-bold uppercase text-sm px-4 py-2 border-2 border-foreground bg-brand-yellow text-on-brand-yellow shadow-hard-sm cursor-default">
         {category}
       </span>
     ) : (

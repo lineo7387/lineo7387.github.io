@@ -92,7 +92,7 @@ const skills = [
             <div class="absolute inset-0 flex items-center justify-center">
               <div class="text-center">
                 <div class="w-32 h-32 mx-auto bg-brand-blue shape-circle border-4 border-foreground mb-4 flex items-center justify-center">
-                  <span class="text-5xl font-black text-white">B</span>
+                  <span class="text-5xl font-black text-on-brand-blue">B</span>
                 </div>
                 <p class="font-bold uppercase tracking-wider text-text">Bauhaus Blog</p>
               </div>
@@ -109,7 +109,7 @@ const skills = [
   <!-- Values Section -->
   <section class="bg-brand-red border-b-4 border-foreground py-16 lg:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white mb-12">
+      <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-on-brand-red mb-12">
         Our Values
       </h2>
       <div class="grid md:grid-cols-2 gap-8">
@@ -121,7 +121,7 @@ const skills = [
                 ${value.icon === 'square' ? 'bg-brand-yellow shape-square' : ''}
                 ${value.icon === 'triangle' ? 'bg-brand-red shape-triangle' : ''}
               `}>
-                <span class="font-black text-2xl text-white">
+                <span class={`font-black text-2xl ${value.icon === 'circle' ? 'text-on-brand-blue' : value.icon === 'square' ? 'text-on-brand-yellow' : 'text-on-brand-red'}`}>
                   {index + 1}
                 </span>
               </div>
@@ -156,7 +156,7 @@ const skills = [
             ))}
           </div>
         </div>
-        <div class="text-lg font-medium text-black/70 dark:text-white/70 leading-relaxed">
+        <div class="text-lg font-medium text-text/70 leading-relaxed">
           <p>
             Our expertise spans the full spectrum of digital design and development.
             From typography selection to responsive layouts, from color theory to interaction design,
@@ -174,10 +174,10 @@ const skills = [
   <!-- CTA Section -->
   <section class="bg-foreground border-b-4 border-border py-16 lg:py-24">
     <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-white mb-6">
+      <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-on-foreground mb-6">
         Ready to Learn?
       </h2>
-      <p class="text-lg font-medium text-white/70 mb-8">
+      <p class="text-lg font-medium text-hero-text-muted mb-8">
         Explore our articles and discover how Bauhaus principles can transform your web design.
       </p>
       <div class="flex flex-wrap justify-center gap-4">
