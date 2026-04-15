@@ -40,18 +40,18 @@ const pageTitle = `${displayName} Articles`;
         <div>
           <a
             href={`${BASE}/skills`}
-            class="inline-flex items-center gap-2 text-white/60 hover:text-brand-yellow transition-colors text-sm font-bold uppercase tracking-wider mb-6"
+            class="inline-flex items-center gap-2 text-hero-text-muted hover:text-brand-yellow transition-colors text-sm font-bold uppercase tracking-wider mb-6"
           >
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="square" stroke-width="3" d="M19 12H5M12 19l-7-7 7-7" />
             </svg>
             All Skills
           </a>
-          <h1 class="text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter text-white leading-[0.9]">
+          <h1 class="text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter text-hero-text leading-[0.9]">
             {displayName}
           </h1>
         </div>
-        <div class="text-white/70">
+        <div class="text-hero-text-muted">
           <p class="text-lg font-medium">
             {skillPosts.length} article{skillPosts.length !== 1 ? 's' : ''}
           </p>
@@ -83,7 +83,7 @@ const pageTitle = `${displayName} Articles`;
           </p>
           <a
             href={`${BASE}/skills`}
-            class="inline-block px-8 py-4 bg-brand-blue text-white border-4 border-foreground font-bold uppercase text-sm hover:bg-brand-blue/90 transition-colors shadow-hard"
+            class="inline-block px-8 py-4 bg-brand-blue text-on-brand-blue border-4 border-foreground font-bold uppercase text-sm hover:bg-brand-blue/90 transition-colors shadow-hard"
           >
             Browse Other Skills
           </a>

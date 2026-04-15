@@ -77,6 +77,15 @@
   /* ── TOC highlight: 高亮背景色 ── */
   --color-toc-highlight: #FFFFFF;
 
+  /* ── Semantic helpers for dark/light mode consistency ── */
+  --color-inverse-surface: #FFFFFF;
+  --color-on-brand-red: #F0F0F0;
+  --color-on-brand-blue: #F0F0F0;
+  --color-on-brand-yellow: #121212;
+  --color-on-foreground: #F0F0F0;
+  --color-hero-text: #F0F0F0;
+  --color-hero-text-muted: rgba(240, 240, 240, 0.7);
+
   /* ── Footer (light mode) ── */
   --color-footer-bg: #121212;
   --color-footer-text: #F0F0F0;
@@ -142,7 +151,16 @@ html.dark body {
   --color-callout-danger-label: #E05C6A;
 
   /* ── TOC highlight: 高亮背景色 ── */
-  --color-toc-highlight: #FFFFFF;
+  --color-toc-highlight: var(--color-surface-elevated);
+
+  /* ── Semantic helpers ── */
+  --color-inverse-surface: #18181F;
+  --color-on-brand-red: #E2E2EC;
+  --color-on-brand-blue: #E2E2EC;
+  --color-on-brand-yellow: #E2E2EC;
+  --color-on-foreground: #E2E2EC;
+  --color-hero-text: #E2E2EC;
+  --color-hero-text-muted: rgba(226, 226, 236, 0.7);
 
   /* ── Footer: 暗色专用色 ── */
   --color-footer-bg: #08080D;

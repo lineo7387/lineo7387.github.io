@@ -65,7 +65,7 @@ const nextHref = nextPost ? `${BASE}/blog/${nextPost.id}` : undefined;
             <div class="flex items-center gap-2">
               <span
                 class:list={[
-                  "text-[10px] font-black uppercase text-background px-2 py-0.5 border border-foreground shrink-0",
+                  "text-[10px] font-black uppercase text-inverse-surface px-2 py-0.5 border border-foreground shrink-0",
                   CATEGORY_COLORS[prevPost.data.category]?.bg ??
                     "bg-brand-blue",
                 ]}
@@ -129,7 +129,7 @@ const nextHref = nextPost ? `${BASE}/blog/${nextPost.id}` : undefined;
               </span>
               <span
                 class:list={[
-                  "text-[10px] font-black uppercase text-background px-2 py-0.5 border border-foreground shrink-0",
+                  "text-[10px] font-black uppercase text-inverse-surface px-2 py-0.5 border border-foreground shrink-0",
                   CATEGORY_COLORS[nextPost.data.category]?.bg ??
                     "bg-brand-blue",
                 ]}
