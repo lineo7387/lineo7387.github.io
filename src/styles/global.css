@@ -19,6 +19,7 @@
   --color-primary-vue: #42b883;
   --color-primary-astro: #7D4DFF;
   --color-primary-typescript: #3178C6;
+  --color-primary-nodejs: #339933;
   --color-primary-green: #3DAA41;
   --color-primary-orange: #E65C00;
 
@@ -39,6 +40,7 @@
   --color-text: #121212;   /* 亮色模式下深色文字 */
   --color-text-muted: #555555;
   --color-text-inverse: #F0F0F0;
+  --color-nav-muted: #555555; /* 导航标签文字，兼顾暗色模式 */
 
   /* ── Semantic: Borders & dividers ── */
   --color-border: #121212;
@@ -108,6 +110,7 @@ html.dark body {
   /* ── Text: 柔和白 ── */
   --color-text: #E2E2EC;
   --color-text-muted: #78788A;
+  --color-nav-muted: #78788A; /* 导航标签，暗色模式用更亮的灰色 */
   --color-text-inverse: #0A0A0F;
 
   /* ── Foreground (边框/装饰): 暗色边框 ── */

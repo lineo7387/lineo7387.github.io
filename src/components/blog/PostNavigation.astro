@@ -43,7 +43,7 @@ const nextHref = nextPost ? `${BASE}/blog/${nextPost.id}` : undefined;
               !nextPost && "mx-auto max-w-xl w-full",
             ]}
           >
-            <span class="text-xs font-bold uppercase tracking-widest text-muted flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-widest text-nav-muted flex items-center gap-2">
               <svg
                 width="16"
                 height="16"
@@ -74,7 +74,7 @@ const nextHref = nextPost ? `${BASE}/blog/${nextPost.id}` : undefined;
               </span>
               <span
                 class:list={[
-                  "font-black text-sm leading-tight line-clamp-2 transition-colors",
+                  "font-black text-sm leading-tight line-clamp-2 transition-colors text-text",
                   CATEGORY_COLORS[prevPost.data.category]?.hover ??
                     "group-hover:text-brand-red",
                 ]}
@@ -97,7 +97,7 @@ const nextHref = nextPost ? `${BASE}/blog/${nextPost.id}` : undefined;
               !prevPost && "mx-auto max-w-xl w-full",
             ]}
           >
-            <span class="text-xs font-bold uppercase tracking-widest text-muted flex items-center justify-end gap-2">
+            <span class="text-xs font-bold uppercase tracking-widest text-nav-muted flex items-center justify-end gap-2">
               下一章
               {nextIndex !== undefined && (
                 <span class:list={["mr-1 font-black"]}>#{nextIndex + 1}</span>
@@ -119,7 +119,7 @@ const nextHref = nextPost ? `${BASE}/blog/${nextPost.id}` : undefined;
             <div class="flex items-center justify-end gap-2">
               <span
                 class:list={[
-                  "font-black text-sm leading-tight line-clamp-2 transition-colors",
+                  "font-black text-sm leading-tight line-clamp-2 transition-colors text-text",
                   CATEGORY_COLORS[nextPost.data.category]?.hover ??
                     "group-hover:text-brand-red",
                 ]}

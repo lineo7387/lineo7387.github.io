@@ -15,5 +15,6 @@ export const CATEGORY_COLORS: Record<string, CategoryColor> = {
   electron: { hex: '#00A8E0', bg: 'bg-primary-electron', text: 'text-inverse-surface', hover: 'hover:text-primary-electron' },
   astro: { hex: '#7D4DFF', bg: 'bg-primary-astro', text: 'text-inverse-surface', hover: 'hover:text-primary-astro' },
   typescript: { hex: '#3178C6', bg: 'bg-primary-typescript', text: 'text-inverse-surface', hover: 'hover:text-primary-typescript' },
+  nodejs: { hex: '#339933', bg: 'bg-primary-nodejs', text: 'text-inverse-surface', hover: 'hover:text-primary-nodejs' },
   design: { hex: '#121212', bg: 'bg-foreground', text: 'text-inverse-surface', hover: 'hover:text-foreground' },
 } as const;

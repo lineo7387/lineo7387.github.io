@@ -17,7 +17,7 @@ export async function getStaticPaths() {
   );
 
   const allSorted = categories.flatMap((cat) => {
-    const plan = planEntries.find((p) => p.data.skill === cat);
+    const plan = planEntries.find((p) => p.data.skill?.toLowerCase() === cat.toLowerCase());
     return sortByPlanOrder(
       allPosts.filter((p) => p.data.category === cat),
       plan?.data.planOrder ?? [],
@@ -31,7 +31,7 @@ export async function getStaticPaths() {
   for (const post of allPosts) {
     paths.push({
       params: { slug: post.id },
-      props: { type: "post", post, category: "", page: 1, allSorted, planEntries, categories },
+      props: { type: "post", post, category: "", page: 1, allSorted, allPosts, planEntries, categories },
     });
   }
 
@@ -67,12 +67,13 @@ export async function getStaticPaths() {
   }));
 }
 
-const { type, post, category, page, allSorted, planEntries, categories, postsPerPage } = Astro.props as {
+const { type, post, category, page, allSorted, allPosts, planEntries, categories, postsPerPage } = Astro.props as {
   type: "post" | "pagination" | "category";
   post: CollectionEntry<"blog"> | undefined;
   category: string;
   page: number;
   allSorted: CollectionEntry<"blog">[];
+  allPosts: CollectionEntry<"blog">[];
   planEntries: CollectionEntry<"plans">[];
   categories: string[];
   postsPerPage: number;
@@ -105,7 +106,7 @@ const headings = rendered?.headings ?? [];
 
 // PostNavigation: use planOrder within the same category
 const postCategory = post?.data.category ?? "";
-const plan = planEntries.find((p) => p.data.skill === postCategory);
+const plan = planEntries.find((p) => p.data.skill?.toLowerCase() === postCategory.toLowerCase());
 const planOrder = plan?.data.planOrder;
 
 let prevPost: typeof post | undefined;
@@ -215,7 +216,7 @@ const PostContentComponent = PostContent as PostContentType;
     <section class="bg-surface-raised py-16 lg:py-24">
       <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div id="posts-container">
-          <BlogList posts={filteredPosts} columns={3} />
+          <BlogList posts={filteredPosts} columns={3} allPosts={allPosts} />
         </div>
         <div class="mt-16 lg:mt-24">
           <Pagination
