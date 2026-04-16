@@ -48,14 +48,14 @@ export async function getCategoryIndex(
   allPosts?: any[],
 ): Promise<number> {
   const planEntries = await getCollection('plans');
-  const plan = planEntries.find((p) => p.data.skill === category);
+  const plan = planEntries.find((p) => p.data.skill?.toLowerCase() === category.toLowerCase());
   if (plan?.data.planOrder && planId) {
     const idx = plan.data.planOrder.indexOf(planId);
     if (idx !== -1) return idx + 1;
   }
   if (allPosts) {
     return (
-      allPosts.filter((p) => p.data.category === category).findIndex((p) => p.id === postId) + 1
+      allPosts.filter((p) => p.data.category?.toLowerCase() === category.toLowerCase()).findIndex((p) => p.id === postId) + 1
     );
   }
   return 1;

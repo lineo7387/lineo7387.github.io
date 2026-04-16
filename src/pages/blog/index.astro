@@ -16,7 +16,7 @@ const categories = [...new Set(allPosts.map((post) => post.data.category))].sort
 );
 
 const allSorted = categories.flatMap((cat) => {
-  const plan = planEntries.find((p) => p.data.skill === cat);
+  const plan = planEntries.find((p) => p.data.skill?.toLowerCase() === cat.toLowerCase());
   return sortByPlanOrder(
     allPosts.filter((p) => p.data.category === cat),
     plan?.data.planOrder ?? [],

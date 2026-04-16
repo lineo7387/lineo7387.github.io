@@ -11,9 +11,9 @@ const allPosts = await getCollection("blog", ({ data }) => !data.draft);
 const planEntries = await getCollection("plans");
 
 // Group by category, sort each group by planOrder
-const categories = [...new Set(allPosts.map((post) => post.data.category))].sort((a, b) =>
-  a.localeCompare(b),
-);
+const categories = [
+  ...new Set(allPosts.map((post) => post.data.category)),
+].sort((a, b) => a.localeCompare(b));
 
 const postsByCategory = Object.fromEntries(
   categories.map((cat) => {
@@ -27,21 +27,20 @@ const postsByCategory = Object.fromEntries(
 // Featured: first post in the first category
 const featuredPost = postsByCategory[categories[0]]?.[0];
 
-// Recent: remaining posts (all but featured), sorted by planOrder
-const recentPosts = (() => {
-  const remaining = featuredPost
-    ? allPosts.filter((p) => p.id !== featuredPost.id)
-    : allPosts;
-  // Sort remaining by planOrder per category, then by category order
-  return categories.flatMap((cat) =>
+// Recent: remaining posts (all but featured), sorted by planOrder, limited to 2 rows (6 posts)
+const recentPosts = categories
+  .flatMap((cat) =>
     (postsByCategory[cat] ?? []).filter((p) => p.id !== featuredPost?.id),
-  );
-})();
+  )
+  .slice(0, 6);
+console.log("recentPosts", recentPosts);
 ---
 
 <BaseLayout title="Home">
   <!-- Hero Section1 -->
-  <section class="relative bg-surface-raised border-b-4 border-foreground overflow-hidden">
+  <section
+    class="relative bg-surface-raised border-b-4 border-foreground overflow-hidden"
+  >
     <div class="grid lg:grid-cols-2 min-h-[600px]">
       <!-- Left: Content -->
       <div
@@ -63,7 +62,8 @@ const recentPosts = (() => {
           <p
             class="text-lg font-medium text-text/70 leading-relaxed mb-8 max-w-md"
           >
-            A personal tech blog exploring web development, design systems, and the craft of building modern applications.
+            A personal tech blog exploring web development, design systems, and
+            the craft of building modern applications.
           </p>
           <div class="flex flex-wrap gap-4">
             <Button href={`${BASE}/blog`} variant="primary" size="lg">
@@ -95,9 +95,7 @@ const recentPosts = (() => {
           <div
             class="absolute w-24 h-24 md:w-32 md:h-32 bg-inverse-surface border-4 border-foreground flex items-center justify-center"
           >
-            <div
-              class="w-12 h-12 md:w-16 md:h-16 bg-brand-red shape-triangle"
-            >
+            <div class="w-12 h-12 md:w-16 md:h-16 bg-brand-red shape-triangle">
             </div>
           </div>
           <!-- Small decorative circles -->
@@ -157,14 +155,18 @@ const recentPosts = (() => {
         >
           Recent Articles
         </h2>
-        <Button href={`${BASE}/blog`} variant="yellow" size="md"> View All </Button>
+        <Button href={`${BASE}/blog`} variant="yellow" size="md">
+          View All
+        </Button>
       </div>
-      <BlogList posts={recentPosts} columns={3} />
+      <BlogList posts={recentPosts} columns={3} allPosts={allPosts} />
     </div>
   </section>
 
   <!-- About Preview Section -->
-  <section class="bg-surface-raised border-b-4 border-foreground py-16 lg:py-24">
+  <section
+    class="bg-surface-raised border-b-4 border-foreground py-16 lg:py-24"
+  >
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div>
@@ -180,7 +182,9 @@ const recentPosts = (() => {
             <span class="text-brand-blue">with Care</span>
           </h2>
           <p class="text-lg font-medium text-text/70 leading-relaxed mb-8">
-            I write about web development, design systems, and the craft of building meaningful digital experiences. Every article is crafted to help you create better, more thoughtful applications.
+            I write about web development, design systems, and the craft of
+            building meaningful digital experiences. Every article is crafted to
+            help you create better, more thoughtful applications.
           </p>
           <Button href={`${BASE}/about`} variant="secondary" size="lg">
             Our Story
@@ -232,9 +236,13 @@ const recentPosts = (() => {
         Stay Updated
       </h2>
       <p class="text-lg font-medium text-hero-text-muted mb-8">
-        Get the latest articles on web development and design delivered to your inbox. No spam, just thoughtful content.
+        Get the latest articles on web development and design delivered to your
+        inbox. No spam, just thoughtful content.
       </p>
-      <form id="newsletter-form" class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+      <form
+        id="newsletter-form"
+        class="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto"
+      >
         <input
           type="email"
           placeholder="Enter your email"
@@ -251,9 +259,9 @@ const recentPosts = (() => {
 </BaseLayout>
 
 <script>
-  const form = document.getElementById('newsletter-form');
-  form?.addEventListener('submit', (e) => {
+  const form = document.getElementById("newsletter-form");
+  form?.addEventListener("submit", (e) => {
     e.preventDefault();
-    alert('Thanks for subscribing!');
+    alert("Thanks for subscribing!");
   });
 </script>

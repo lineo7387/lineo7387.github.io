@@ -109,7 +109,7 @@ const authorPosts = authorCategories.flatMap((cat) => {
       </div>
 
       {authorPosts.length > 0 ? (
-        <BlogList posts={authorPosts} columns={3} />
+        <BlogList posts={authorPosts} columns={3} allPosts={allPosts} />
       ) : (
         <div class="text-center py-16 bg-muted border-4 border-foreground">
           <p class="text-xl font-medium text-muted">No articles found.</p>
