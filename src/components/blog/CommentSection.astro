@@ -41,10 +41,8 @@ const { id } = Astro.props;
     s.dataset.reactionsEnabled = '1';
     s.dataset.emitMetadata = '0';
     s.dataset.inputPosition = 'bottom';
-    s.dataset.theme = 'https://lineo7387.github.io/themes/giscus-light.css';
-    s.dataset.themeURL = 'https://lineo7387.github.io/themes/giscus-dark.css';
+    s.dataset.theme = 'https://lineo7387.github.io/themes/giscus-bauhaus.css';
     s.dataset.lang = 'zh-CN';
-    s.dataset.loading = 'lazy';
     var giscusDiv = document.querySelector('.giscus');
     if (giscusDiv) {
       giscusDiv.appendChild(s);
