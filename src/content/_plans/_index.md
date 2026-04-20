@@ -18,6 +18,7 @@
 | Node.js | 24.x | in-progress | [_plans/nodejs.md](nodejs.md) | 5 / 15 |
 | Express | 5.x | in-progress | [_plans/express.md](express.md) | 5 / 13 |
 | FastAPI | 0.115.x | in-progress | [_plans/fastapi.md](fastapi.md) | 8 / 13 |
+| MySQL | 8.x | in-progress | [_plans/mysql.md](mysql.md) | 4 / 12 |
 
 ## 状态说明
 

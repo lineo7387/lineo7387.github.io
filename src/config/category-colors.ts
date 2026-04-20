@@ -17,5 +17,7 @@ export const CATEGORY_COLORS: Record<string, CategoryColor> = {
   typescript: { hex: '#3178C6', bg: 'bg-primary-typescript', text: 'text-inverse-surface', hover: 'hover:text-primary-typescript' },
   nodejs: { hex: '#339933', bg: 'bg-primary-nodejs', text: 'text-inverse-surface', hover: 'hover:text-primary-nodejs' },
   express: { hex: '#323232', bg: 'bg-primary-express', text: 'text-inverse-surface', hover: 'hover:text-primary-express' },
+  fastapi: { hex: '#059138', bg: 'bg-primary-fastapi', text: 'text-inverse-surface', hover: 'hover:text-primary-fastapi' },
+  mysql: { hex: '#F29111', bg: 'bg-primary-mysql', text: 'text-inverse-surface', hover: 'hover:text-primary-mysql' },
   design: { hex: '#121212', bg: 'bg-foreground', text: 'text-inverse-surface', hover: 'hover:text-foreground' },
 } as const;
