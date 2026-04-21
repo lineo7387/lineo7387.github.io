@@ -1,6 +1,6 @@
 # Bauhaus Blog
 
-一个基于 **Astro 6** + **Bauhaus 设计系统**的技术博客网站，部署于 `https://159.75.132.188/`。
+一个基于 **Astro 6** + **Bauhaus 设计系统**的技术博客网站，部署于 `https://lineo7387.github.io/`。
 
 ## 技术栈
 

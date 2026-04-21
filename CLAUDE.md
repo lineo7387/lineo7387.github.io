@@ -2,7 +2,7 @@
 
 ## Overview
 
-A blog website built with Astro 6.x and the Bauhaus design system. Deploy URL: `https://159.75.132.188/`
+A blog website built with Astro 6.x and the Bauhaus design system. Deploy URL: `https://lineo7387.github.io/`
 
 ## Key Technical Decisions
 

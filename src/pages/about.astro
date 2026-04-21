@@ -1,188 +1,329 @@
 ---
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Button from '../components/ui/Button.astro';
-import { BASE } from '../utils/base';
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Button from "../components/ui/Button.astro";
+import BlogList from "../components/blog/BlogList.astro";
+import { getCollection } from "astro:content";
+import { BASE } from "../utils/base";
+import { CATEGORY_COLORS } from "../config/category-colors";
+import { getSkillDisplayName } from "../utils/post";
 
-const values = [
-  {
-    title: 'Form Follows Function',
-    description: 'Every element serves a purpose. We believe in design that communicates clearly without unnecessary decoration.',
-    icon: 'square'
-  },
-  {
-    title: 'Geometric Purity',
-    description: 'Circles, squares, and triangles. Simple shapes create powerful visual impact when composed with intention.',
-    icon: 'circle'
-  },
-  {
-    title: 'Typography as Art',
-    description: 'Text is not just content—it\'s a visual element. We treat typography with the respect it deserves.',
-    icon: 'triangle'
-  },
-  {
-    title: 'Craftsmanship',
-    description: 'Quality matters. Every pixel, every line of code, every word is placed with intention and care.',
-    icon: 'square'
-  }
-];
+const allPosts = await getCollection("blog", ({ data }) => !data.draft);
+const plans = await getCollection("plans");
 
-const skills = [
-  'Design Systems',
-  'Typography',
-  'Web Development',
-  'User Experience',
-  'Visual Design',
-  'CSS Art'
-];
+// ── Stats ──
+const totalPosts = allPosts.length;
+const categories = [...new Set(allPosts.map((p) => p.data.category))];
+const categoryCount = categories.length;
+
+const earliestPost = allPosts.length > 0
+  ? [...allPosts].sort((a, b) => a.data.pubDate.getTime() - b.data.pubDate.getTime())[0]
+  : null;
+const writingSince = earliestPost?.data.pubDate;
+const writingMonths = writingSince
+  ? Math.max(1, Math.floor((Date.now() - writingSince.getTime()) / (1000 * 60 * 60 * 24 * 30)))
+  : 0;
+
+// 路线完成度：有 plan 的分类的平均完成百分比
+const plannedCategories = categories
+  .map((cat) => {
+    const plan = plans.find((p) => p.data.skill?.toLowerCase() === cat.toLowerCase());
+    if (!plan) return null;
+    const completedInPlan = [...new Set(
+      allPosts
+        .filter((p) => p.data.category === cat && p.data.planId)
+        .map((p) => p.data.planId!)
+    )].filter((id) => plan.data.planOrder?.includes(id)).length;
+    const totalInPlan = plan.data.total ?? plan.data.planOrder?.length ?? 0;
+    return totalInPlan > 0 ? completedInPlan / totalInPlan : 1;
+  })
+  .filter((v): v is number => v !== null);
+
+const avgProgress = plannedCategories.length > 0
+  ? Math.round((plannedCategories.reduce((a, b) => a + b, 0) / plannedCategories.length) * 100)
+  : 0;
+
+// ── Skill Map data ──
+const categoryStats = categories
+  .map((cat) => {
+    const count = allPosts.filter((p) => p.data.category === cat).length;
+    const plan = plans.find((p) => p.data.skill?.toLowerCase() === cat.toLowerCase());
+    const completedInPlan = plan
+      ? [...new Set(
+          allPosts
+            .filter((p) => p.data.category === cat && p.data.planId)
+            .map((p) => p.data.planId!)
+        )].filter((id) => plan.data.planOrder?.includes(id)).length
+      : 0;
+    const totalInPlan = plan ? (plan.data.total ?? plan.data.planOrder?.length ?? 0) : 0;
+    return { name: cat, count, completedInPlan, totalInPlan, hasPlan: !!plan };
+  })
+  .sort((a, b) => a.name.localeCompare(b.name));
+
+// ── Latest posts ──
+const latestPosts = [...allPosts]
+  .sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime())
+  .slice(0, 3);
+
+// ── Bio tech stack text ──
+const displayNames = categories
+  .map((c) => getSkillDisplayName(c))
+  .sort((a, b) => a.localeCompare(b));
+const techStackText = displayNames.length <= 3
+  ? displayNames.join("、")
+  : `${displayNames.slice(0, 3).join("、")} 等 ${displayNames.length} 个方向`;
 ---
 
-<BaseLayout title="About" description="Learn about our mission to bring Bauhaus design principles to modern web development.">
-  <!-- Hero Section -->
+<BaseLayout title="About" description="关于 lineo — 全栈开发者与技术写作者。">
+  <!-- ═══════════════ Hero ═══════════════ -->
   <section class="relative bg-brand-yellow border-b-4 border-foreground overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 lg:py-24">
       <div class="grid lg:grid-cols-2 gap-12 items-center">
         <div>
-          <span class="inline-block bg-text text-background text-xs font-bold uppercase tracking-widest px-3 py-1 mb-6">
-            Our Story
+          <span class="inline-block bg-text text-background text-xs font-bold uppercase tracking-widest px-3 py-1 mb-6 anim-slide-left delay-hero-0">
+            About Me
           </span>
           <h1 class="text-5xl md:text-6xl lg:text-7xl font-black uppercase tracking-tighter text-text leading-[0.9]">
-            About<br/>
-            <span class="text-brand-red">Us</span>
+            <span class="anim-line-pop delay-hero-80">About</span><br />
+            <span class="text-brand-red anim-line-pop delay-hero-150">Me</span>
           </h1>
         </div>
-        <div class="text-text/80">
+        <div class="text-text/80 anim-slide-up delay-hero-200">
           <p class="text-lg font-medium leading-relaxed">
-            We are designers and developers united by a passion for timeless design principles.
-            Our mission: make the wisdom of Bauhaus accessible to modern web creators.
+            我是 lineo，一个热爱技术分享的全栈开发者。
+            这个博客记录我的学习路线、实践心得与对技术的思考。
           </p>
         </div>
       </div>
     </div>
     <!-- Geometric decorations -->
-    <div class="absolute top-8 right-8 w-16 h-16 bg-brand-red shape-circle border-4 border-foreground"></div>
-    <div class="absolute bottom-8 left-1/4 w-12 h-12 bg-brand-blue shape-square border-4 border-foreground"></div>
+    <div class="absolute top-8 right-8 w-16 h-16 bg-brand-red shape-circle border-4 border-foreground anim-circle-pop delay-hero-100"></div>
+    <div class="absolute bottom-8 left-1/4 w-12 h-12 bg-brand-blue shape-square border-4 border-foreground anim-square-spin delay-hero-200"></div>
+    <div class="absolute top-1/2 right-1/4 w-8 h-8 bg-brand-red shape-triangle border-2 border-foreground anim-drop-in delay-hero-300"></div>
   </section>
 
-  <!-- Mission Section -->
-  <section class="bg-surface-raised border-b-4 border-foreground py-16 lg:py-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid lg:grid-cols-2 gap-16">
-        <div>
-          <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-text mb-6">
-            Our Mission
-          </h2>
-          <div class="space-y-4 text-lg font-medium text-text/70 leading-relaxed">
-            <p>
-              The Bauhaus movement existed for only 14 years, yet its influence spans a century.
-              Founded in Weimar, Germany in 1919, the Bauhaus school revolutionized how we think about design.
-            </p>
-            <p>
-              We believe these principles are more relevant today than ever. In an age of visual clutter and design by committee,
-              Bauhaus offers a path to clarity: reduce to the essential, execute with precision, and create with purpose.
-            </p>
-            <p>
-              This blog is our contribution to keeping these ideas alive. Through articles, tutorials, and explorations,
-              we share what we learn about applying Bauhaus wisdom to modern web development.
-            </p>
-          </div>
-        </div>
-        <div class="relative">
-          <!-- Portrait placeholder with geometric composition -->
-          <div class="aspect-[4/5] bg-muted border-4 border-foreground relative overflow-hidden">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="text-center">
-                <div class="w-32 h-32 mx-auto bg-brand-blue shape-circle border-4 border-foreground mb-4 flex items-center justify-center">
-                  <span class="text-5xl font-black text-on-brand-blue">B</span>
-                </div>
-                <p class="font-bold uppercase tracking-wider text-text">Bauhaus Blog</p>
-              </div>
-            </div>
-            <!-- Geometric accents -->
-            <div class="absolute top-4 left-4 w-8 h-8 bg-brand-red shape-square"></div>
-            <div class="absolute bottom-4 right-4 w-6 h-6 bg-brand-yellow shape-circle border-2 border-foreground"></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Values Section -->
-  <section class="bg-brand-red border-b-4 border-foreground py-16 lg:py-24">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-      <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-on-brand-red mb-12">
-        Our Values
-      </h2>
-      <div class="grid md:grid-cols-2 gap-8">
-        {values.map((value, index) => (
-          <article class="bg-surface-raised border-4 border-foreground shadow-hard-lg p-8 card-lift">
-            <div class="flex items-start gap-6">
-              <div class={`w-16 h-16 flex-shrink-0 border-4 border-foreground flex items-center justify-center
-                ${value.icon === 'circle' ? 'bg-brand-blue shape-circle' : ''}
-                ${value.icon === 'square' ? 'bg-brand-yellow shape-square' : ''}
-                ${value.icon === 'triangle' ? 'bg-brand-red shape-triangle' : ''}
-              `}>
-                <span class={`font-black text-2xl ${value.icon === 'circle' ? 'text-on-brand-blue' : value.icon === 'square' ? 'text-on-brand-yellow' : 'text-on-brand-red'}`}>
-                  {index + 1}
-                </span>
-              </div>
-              <div>
-                <h3 class="text-xl font-black uppercase tracking-tight text-text mb-3">
-                  {value.title}
-                </h3>
-                <p class="text-sm font-medium text-text/70 leading-relaxed">
-                  {value.description}
-                </p>
-              </div>
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  </section>
-
-  <!-- Skills/Expertise Section -->
+  <!-- ═══════════════ Bio ═══════════════ -->
   <section class="bg-surface-raised border-b-4 border-foreground py-16 lg:py-24">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="grid lg:grid-cols-2 gap-16 items-center">
-        <div>
-          <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-text mb-8">
-            Expertise
+        <!-- Left: Bio text -->
+        <div class="scroll-anim anim-slide-left delay-0">
+          <span class="inline-block bg-brand-red text-xs font-bold uppercase tracking-widest text-on-brand-red px-3 py-1 mb-6">
+            Who I Am
+          </span>
+          <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-text mb-6 leading-[0.95]">
+            写代码，也<br />
+            <span class="text-brand-blue">写文字</span>
           </h2>
-          <div class="flex flex-wrap gap-3">
-            {skills.map(skill => (
-              <span class="bg-brand-yellow text-sm font-bold uppercase px-4 py-2 border-2 border-foreground shadow-hard-sm">
-                {skill}
-              </span>
-            ))}
+          <div class="space-y-4 text-base font-medium text-text/70 leading-relaxed">
+            <p>
+              我是 lineo，一个相信"输出倒逼输入"的开发者。日常工作中我涉猎
+              {techStackText}，
+              但比起罗列技术栈，我更关心如何把复杂概念讲清楚。
+            </p>
+            <p>
+              这个博客诞生于一个朴素的念头：与其让笔记散落在各种文档和脑图里，
+              不如把它们整理成系统化的学习路线。每一篇文章都对应一个真实的学习节点，
+              从零基础到进阶技能，循序渐进。
+            </p>
+            <p>
+              内容覆盖前端框架、后端服务、数据库与设计系统。我不追求面面俱到，
+              而是希望每读完一篇，你都能立刻动手实践。
+            </p>
           </div>
         </div>
-        <div class="text-lg font-medium text-text/70 leading-relaxed">
-          <p>
-            Our expertise spans the full spectrum of digital design and development.
-            From typography selection to responsive layouts, from color theory to interaction design,
-            we bring a holistic approach to every project.
-          </p>
-          <p class="mt-4">
-            But expertise is not the goal—clarity is. We use our skills not to impress,
-            but to create experiences that serve users effectively.
-          </p>
+
+        <!-- Right: Geometric portrait -->
+        <div class="relative scroll-anim anim-slide-right delay-150">
+          <div class="aspect-[4/5] bg-muted border-4 border-foreground relative overflow-hidden">
+            <!-- L-shaped geometric composition -->
+            <div class="absolute inset-0 flex items-center justify-center">
+              <!-- Vertical bar of L -->
+              <div class="absolute w-16 h-48 bg-brand-red border-4 border-foreground -translate-x-8"></div>
+              <!-- Horizontal bar of L -->
+              <div class="absolute w-32 h-16 bg-brand-red border-4 border-foreground translate-x-0 translate-y-16"></div>
+              <!-- Overlapping blue square -->
+              <div class="absolute w-20 h-20 bg-brand-blue border-4 border-foreground translate-x-12 -translate-y-12 rotate-12"></div>
+              <!-- Yellow accent -->
+              <div class="absolute w-8 h-8 bg-brand-yellow shape-circle border-2 border-foreground translate-x-20 translate-y-20"></div>
+            </div>
+            <!-- Corner accents -->
+            <div class="absolute top-4 right-4 w-6 h-6 bg-brand-yellow shape-triangle"></div>
+            <div class="absolute bottom-4 left-4 w-4 h-4 bg-brand-blue shape-circle border-2 border-foreground"></div>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- CTA Section -->
+  <!-- ═══════════════ Stats Bar ═══════════════ -->
+  <section class="bg-brand-red border-b-4 border-foreground py-16 lg:py-20">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Stat 1: Total Posts -->
+        <div class="scroll-anim anim-slide-up delay-0 bg-surface-raised border-4 border-foreground shadow-hard-md p-6 text-center">
+          <div class="w-12 h-12 mx-auto mb-4 bg-brand-red shape-circle border-4 border-foreground flex items-center justify-center">
+            <svg class="w-6 h-6 text-on-brand-red" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="square">
+              <path d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+            </svg>
+          </div>
+          <p class="text-4xl md:text-5xl font-black text-text mb-1">{totalPosts}</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-text/60">Articles</p>
+        </div>
+
+        <!-- Stat 2: Categories -->
+        <div class="scroll-anim anim-slide-up delay-100 bg-surface-raised border-4 border-foreground shadow-hard-md p-6 text-center">
+          <div class="w-12 h-12 mx-auto mb-4 bg-brand-blue shape-square border-4 border-foreground flex items-center justify-center">
+            <svg class="w-6 h-6 text-on-brand-blue" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="square">
+              <path d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
+            </svg>
+          </div>
+          <p class="text-4xl md:text-5xl font-black text-text mb-1">{categoryCount}</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-text/60">Skills</p>
+        </div>
+
+        <!-- Stat 3: Writing Duration -->
+        <div class="scroll-anim anim-slide-up delay-200 bg-surface-raised border-4 border-foreground shadow-hard-md p-6 text-center">
+          <div class="w-12 h-12 mx-auto mb-4 bg-brand-yellow shape-triangle border-4 border-foreground flex items-center justify-center">
+            <svg class="w-6 h-6 text-on-brand-yellow" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="square">
+              <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <p class="text-4xl md:text-5xl font-black text-text mb-1">{writingMonths}</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-text/60">Months Writing</p>
+        </div>
+
+        <!-- Stat 4: Avg Progress -->
+        <div class="scroll-anim anim-slide-up delay-300 bg-surface-raised border-4 border-foreground shadow-hard-md p-6 text-center">
+          <div class="w-12 h-12 mx-auto mb-4 bg-brand-red shape-circle border-4 border-foreground flex items-center justify-center relative">
+            <div class="absolute w-6 h-6 bg-brand-blue shape-square border-2 border-foreground"></div>
+          </div>
+          <p class="text-4xl md:text-5xl font-black text-text mb-1">{avgProgress}%</p>
+          <p class="text-xs font-bold uppercase tracking-widest text-text/60">Roadmap Progress</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ Skill Map ═══════════════ -->
+  <section class="bg-surface-raised border-b-4 border-foreground py-16 lg:py-24 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center gap-4 mb-16 scroll-anim anim-slide-left delay-0">
+        <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-text">
+          Skill Map
+        </h2>
+        <div class="flex-1 h-4 bg-foreground scroll-anim anim-slide-up delay-50"></div>
+      </div>
+
+      <div class="flex flex-wrap justify-center items-start gap-5 lg:gap-7 py-4 px-2">
+        {categoryStats.map((cat, index) => {
+          const colors = CATEGORY_COLORS[cat.name.toLowerCase()] ?? CATEGORY_COLORS['python'];
+          const displayName = getSkillDisplayName(cat.name);
+          const isCircle = index % 2 === 0;
+
+          // Size by article count
+          let sizeClass = 'w-28 h-28 text-xs';
+          if (cat.count >= 6) sizeClass = 'w-44 h-44 text-base';
+          else if (cat.count >= 3) sizeClass = 'w-36 h-36 text-sm';
+
+          // Scattered vertical offset (margin to avoid transform conflict)
+          const marginOffsets = [
+            'mt-0',
+            'mt-8',
+            '-mt-5',
+            'mt-4',
+            '-mt-8',
+            'mt-3',
+            '-mt-3',
+            'mt-6',
+          ];
+          const marginOffset = marginOffsets[index % marginOffsets.length];
+
+          // Float animation stagger
+          const floatDelay = ((index * 0.5) % 2.5).toFixed(1);
+          const entryDelay = index * 60;
+
+          const progress = cat.hasPlan && cat.totalInPlan > 0
+            ? Math.round((cat.completedInPlan / cat.totalInPlan) * 100)
+            : 100;
+
+          return (
+            <a
+              href={`${BASE}/skills/${cat.name}`}
+              class={`group relative scroll-anim anim-bounce-in ${marginOffset}`}
+              style={`animation-delay: ${entryDelay}ms;`}
+            >
+              {/* Floating bubble */}
+              <div
+                class={`${sizeClass} ${isCircle ? 'shape-circle' : ''} ${colors.bg} ${colors.text}
+                  border-4 border-foreground shadow-hard-md
+                  flex items-center justify-center text-center
+                  transition-transform duration-200 hover:scale-110 hover:z-10
+                  anim-float
+                `}
+                style={`animation-delay: ${floatDelay}s;`}
+              >
+                {/* Content */}
+                <div class="px-2 leading-none">
+                  <span class="block font-black uppercase tracking-tight break-words">
+                    {displayName}
+                  </span>
+                  <span class="block text-[0.7em] font-medium opacity-70 mt-1">
+                    {cat.count} 篇
+                  </span>
+                </div>
+
+                {/* Hover: progress tooltip */}
+                {cat.hasPlan && (
+                  <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 translate-y-full opacity-0 group-hover:opacity-100 group-hover:translate-y-2 transition-all duration-200 pointer-events-none z-20">
+                    <div class="bg-foreground text-on-foreground px-2.5 py-1 text-[10px] font-black whitespace-nowrap border-2 border-foreground shadow-hard-sm">
+                      {progress}%
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* Decorative accent on hover */}
+              <div class={`absolute -top-1.5 -right-1.5 w-4 h-4 border-2 border-foreground ${isCircle ? 'shape-square' : 'shape-circle'} ${colors.bg === 'bg-brand-yellow' ? 'bg-brand-red' : 'bg-brand-yellow'} opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none`}></div>
+            </a>
+          );
+        })}
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════ Latest Posts ═══════════════ -->
+  {
+    latestPosts.length > 0 && (
+      <section class="bg-brand-blue border-b-4 border-foreground py-16 lg:py-24 overflow-hidden">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div class="flex items-center justify-between mb-8">
+            <h2 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-hero-text scroll-anim anim-slide-left delay-0">
+              Recent Articles
+            </h2>
+            <Button href={`${BASE}/blog`} variant="yellow" size="md" class="scroll-anim anim-scale-in delay-100">
+              View All
+            </Button>
+          </div>
+          <div class="scroll-anim anim-slide-up delay-0">
+            <BlogList posts={latestPosts} columns={3} allPosts={allPosts} />
+          </div>
+        </div>
+      </section>
+    )
+  }
+
+  <!-- ═══════════════ CTA ═══════════════ -->
   <section class="bg-foreground border-b-4 border-border py-16 lg:py-24">
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-      <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-on-foreground mb-6">
-        Ready to Learn?
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center scroll-anim anim-bounce-in delay-0">
+      <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tight text-on-foreground mb-6 scroll-anim anim-line-pop delay-0">
+        Ready to Dive In?
       </h2>
-      <p class="text-lg font-medium text-hero-text-muted mb-8">
-        Explore our articles and discover how Bauhaus principles can transform your web design.
+      <p class="text-lg font-medium text-hero-text-muted mb-8 scroll-anim anim-slide-up delay-100">
+        探索文章，或者告诉我你的想法。
       </p>
-      <div class="flex flex-wrap justify-center gap-4">
+      <div class="flex flex-wrap justify-center gap-4 scroll-anim anim-scale-in delay-200">
         <Button href={`${BASE}/blog`} variant="yellow" size="lg">
-          Read the Blog
+          Explore Articles
         </Button>
         <Button href={`${BASE}/contact`} variant="outline" size="lg">
           Get in Touch
