@@ -3,7 +3,7 @@ title: htmx 完整学习路线
 description: 从基础到进阶的系统化学习路径，掌握 htmx 核心概念、AJAX 交互、事件系统与后端集成
 skill: htmx
 version: "2.x"
-status: planning
+status: in-progress
 total: 13
 createdAt: 2026-04-25
 updatedAt: 2026-04-25
@@ -31,22 +31,22 @@ planOrder:
 
 ## 基础知识
 
-- [ ] htmx 简介与核心概念
+- [✅] htmx 简介与核心概念
       desc: 理解 htmx 的设计哲学：回归超文本本质，用 HTML 属性替代 JavaScript 实现 AJAX、CSS 过渡、WebSocket 和 Server-Sent Events
       difficulty: easy
       estimatedWords: 1500
 
-- [ ] hx-get 与 hx-post 基础请求
+- [✅] hx-get 与 hx-post 基础请求
       desc: 掌握基本 HTTP 请求属性，理解 htmx 如何通过声明式属性发起异步请求并替换页面内容
       difficulty: easy
       estimatedWords: 1200
 
-- [ ] 目标元素与内容交换策略
+- [✅] 目标元素与内容交换策略
       desc: hx-target 指定更新目标，hx-swap 控制交换方式（innerHTML、outerHTML、beforebegin 等）
       difficulty: easy
       estimatedWords: 1500
 
-- [ ] 触发器与修饰符
+- [✅] 触发器与修饰符
       desc: hx-trigger 的完整语法：事件类型、过滤器、延迟、轮询、可见性触发及 once/changed 等修饰符
       difficulty: medium
       estimatedWords: 1800
