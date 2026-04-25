@@ -3,7 +3,7 @@ title: htmx 完整学习路线
 description: 从基础到进阶的系统化学习路径，掌握 htmx 核心概念、AJAX 交互、事件系统与后端集成
 skill: htmx
 version: "2.x"
-status: in-progress
+status: completed
 total: 13
 createdAt: 2026-04-25
 updatedAt: 2026-04-25
@@ -92,12 +92,12 @@ planOrder:
 
 ## 高级主题
 
-- [ ] 自定义扩展开发
+- [✅] 自定义扩展开发
       desc: htmx.defineExtension API，创建自定义行为扩展，理解扩展的生命周期与钩子
       difficulty: hard
       estimatedWords: 2500
 
-- [ ] htmx 与现代前端框架混用
+- [✅] htmx 与现代前端框架混用
       desc: htmx 与 Alpine.js、React、Vue 的共存策略，渐进增强与局部交互的架构设计
       difficulty: hard
       estimatedWords: 2500
