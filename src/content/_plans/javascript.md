@@ -3,10 +3,10 @@ title: JavaScript 完整学习路线
 description: 从 ES5 基础到 ES2025 新特性，系统化学习 JavaScript 语言核心、数据结构与高级主题
 skill: javascript
 version: "ES2025"
-status: in-progress
-total: 18
+status: completed
+total: 19
 createdAt: 2026-04-25
-updatedAt: 2026-04-25
+updatedAt: 2026-04-26
 planOrder:
   - variables-and-data-types
   - operators-and-control-flow
@@ -59,83 +59,83 @@ planOrder:
 
 ## 进阶技能
 
-- [ ] ES6 解构赋值与扩展运算符
+- [✅] ES6 解构赋值与扩展运算符
       desc: 对象/数组解构、默认参数、rest 参数、展开运算符在函数调用与字面量中的应用
       difficulty: easy
       estimatedWords: 1500
 
-- [ ] 类与继承机制
+- [✅] 类与继承机制
       desc: class 语法糖、constructor、static 方法、getter/setter、私有字段（#field）、extends 与 super
       difficulty: medium
       estimatedWords: 2000
 
-- [ ] Promise 与 async/await
+- [✅] Promise 与 async/await
       desc: Promise 状态机、Promise.all/race/allSettled、async 函数、错误处理、事件循环协作
       difficulty: medium
       estimatedWords: 2500
 
-- [ ] 模块与导入导出
+- [✅] 模块与导入导出
       desc: ESM（import/export）与 CommonJS（require/module.exports）对比、动态导入、循环依赖处理
       difficulty: easy
       estimatedWords: 1500
 
-- [ ] ES2021～ES2025 新特性
+- [✅] ES2021～ES2025 新特性
       desc: 逻辑赋值运算符、数值分隔符、Promise.any、Array.at()、顶层 await、Error.cause、装饰器、Array grouping、Record&Tuple、using 声明、import 属性
       difficulty: medium
       estimatedWords: 3000
 
-- [ ] Proxy、Reflect 与 Symbol
+- [✅] Proxy、Reflect 与 Symbol
       desc: Proxy 拦截器（get/set/has/apply 等）、Reflect API、Well-Known Symbols（Symbol.iterator/Symbol.toPrimitive）、可劫持的语言行为
       difficulty: hard
       estimatedWords: 2500
 
 ## 生态与实践
 
-- [ ] 数组内置方法综合运用
+- [✅] 数组内置方法综合运用
       desc: forEach/map/filter/find/findIndex/every/some/reduce/sort 的组合使用、惰性求值与性能陷阱
       difficulty: medium
       estimatedWords: 2000
 
 ## 综合案例：手写数据结构
 
-- [ ] 栈与队列
+- [✅] 栈与队列
       desc: 手写 Stack（push/pop/peek）、Queue（enqueue/dequeue）、Deque、双端队列、优先级队列；应用场景：函数调用栈、任务调度、括号匹配
       difficulty: easy
       estimatedWords: 2000
 
-- [ ] 链表
+- [✅] 链表
       desc: 单向链表、双向链表；手写 append/removeAt/insert/reverse；与数组对比（插入/删除/查询复杂度）；约瑟夫斯问题
       difficulty: medium
       estimatedWords: 2500
 
-- [ ] 二叉搜索树
+- [✅] 二叉搜索树
       desc: BST 的插入、查找、删除、遍历（前/中/后序）、平衡与旋转（AVL 树/红黑树概念）；手写 BST 类与递归算法
       difficulty: hard
       estimatedWords: 3000
 
-- [ ] 哈希表
+- [✅] 哈希表
       desc: 哈希函数设计、冲突解决（链地址法/开放地址法）、负载因子与扩容、手写 HashMap 与 HashSet；LRU Cache 综合案例
       difficulty: hard
       estimatedWords: 3000
 
-- [ ] 图结构
+- [✅] 图结构
       desc: 图的表示（邻接表/邻接矩阵）、BFS 与 DFS 遍历、最短路径（Dijkstra）、拓扑排序、手写图类
       difficulty: hard
       estimatedWords: 2500
 
 ## 高级主题
 
-- [ ] 排序与搜索算法
+- [✅] 排序与搜索算法
       desc: 归并排序、快速排序、堆排序的原理与实现；二分搜索、分治策略、算法复杂度分析（时间/空间）
       difficulty: medium
       estimatedWords: 2500
 
-- [ ] 迭代器与生成器
+- [✅] 迭代器与生成器
       desc: 可迭代协议与迭代器协议、自定义可迭代对象、生成器函数（function*）、yield/return/throw、异步生成器
       difficulty: hard
       estimatedWords: 2000
 
-- [ ] 测试与调试
+- [✅] 测试与调试
       desc: JavaScript 调试技巧（Chrome DevTools）、断言与异常处理、单元测试框架（Vitest/Jest）、测试覆盖率、TDD 实践
       difficulty: easy
       estimatedWords: 1500

@@ -66,7 +66,7 @@ ES2016 新增 `**` 运算符：
 ### 数字比较中的陷阱
 
 ```js
-null == 0;  // true（null 被转换为 0）
+null == 0;  // false（null 只与 undefined  loosely 相等）
 null < 1;   // true
 null >= 1;  // false
 undefined == 0; // false（undefined 只与 undefined/null 相等）
